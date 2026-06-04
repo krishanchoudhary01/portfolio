@@ -127,7 +127,6 @@ function renderProjects(filter = 'all') {
     filtered.forEach((project, index) => {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card';
-        projectCard.style.animationDelay = `${index * 0.1}s`;
         projectCard.innerHTML = `
             <div class="project-image-wrapper">
                 <img src="${project.image}" alt="${project.title}" class="project-image">
@@ -176,23 +175,4 @@ if (contactForm) {
 document.addEventListener('DOMContentLoaded', () => {
     renderProjects();
     updateActiveNav();
-});
-
-// Scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-            observer.unobserve(entry.target);
-        }
-    });
-}, observerOptions);
-
-document.querySelectorAll('section').forEach(section => {
-    observer.observe(section);
 });
