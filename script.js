@@ -1,178 +1,168 @@
-// Navigation functionality
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-const navLinks = document.querySelectorAll('.nav-link');
-
-// Mobile menu toggle
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
-}
-
-// Close menu when link is clicked
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        updateActiveNav();
-    });
-});
-
-// Update active navigation link on scroll
-window.addEventListener('scroll', updateActiveNav);
-
-function updateActiveNav() {
-    let current = '';
-    const sections = document.querySelectorAll('section');
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
-            link.classList.add('active');
-        }
-    });
-}
-
-// Projects data with filters
+// ─── Projects Data ──────────────────────────────────────────
 const projects = [
     {
         title: 'Sales Analytics Dashboard',
-        description: 'Comprehensive Power BI dashboard tracking sales performance, trends, and KPIs across regions with 25% improvement in decision-making speed.',
-        tags: ['Power BI', 'SQL', 'DAX'],
-        filter: 'powerbi',
-        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop',
-        github: '#',
+        description: 'Power BI dashboard tracking sales performance, trends, and KPIs across multiple regions. Resulted in 25% improvement in decision-making speed.',
+        tags: ['Power BI', 'SQL', 'Excel'],
+        github: 'https://github.com/krishanchoudhary01',
         demo: '#'
     },
     {
-        title: 'Customer Segmentation Analysis',
-        description: 'RFM analysis using Python and SQL to segment customers, enabling targeted marketing campaigns that increased retention by 18%.',
+        title: 'Customer Segmentation — RFM Analysis',
+        description: 'RFM analysis using Python and SQL to segment customers, enabling targeted campaigns that increased retention by 18%.',
         tags: ['Python', 'SQL', 'Pandas'],
-        filter: 'python',
-        image: 'https://images.unsplash.com/photo-1460925895917-adf4ee868993?w=500&h=300&fit=crop',
-        github: '#',
-        demo: '#'
-    },
-    {
-        title: 'Inventory Optimization',
-        description: 'Data models and Power BI visualizations to optimize inventory levels, reducing carrying costs by 22% while maintaining service levels.',
-        tags: ['Power BI', 'Excel', 'DAX'],
-        filter: 'powerbi',
-        image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=300&fit=crop',
-        github: '#',
+        github: 'https://github.com/krishanchoudhary01',
         demo: '#'
     },
     {
         title: 'Revenue Forecasting Model',
-        description: 'Predictive models using Python (scikit-learn) and SQL queries to forecast revenue with 92% accuracy, supporting strategic planning.',
-        tags: ['Python', 'SQL', 'ML'],
-        filter: 'python',
-        image: 'https://images.unsplash.com/photo-1516321318423-f06f70504c11?w=500&h=300&fit=crop',
-        github: '#',
+        description: 'Predictive model using scikit-learn and SQL to forecast revenue with 92% accuracy. Used directly in quarterly strategic planning.',
+        tags: ['Python', 'scikit-learn', 'SQL'],
+        github: 'https://github.com/krishanchoudhary01',
+        demo: '#'
+    },
+    {
+        title: 'Inventory Optimization',
+        description: 'Data models and Power BI visualizations to optimize inventory levels — reduced carrying costs by 22% while maintaining service levels.',
+        tags: ['Power BI', 'DAX', 'Excel'],
+        github: 'https://github.com/krishanchoudhary01',
         demo: '#'
     },
     {
         title: 'Employee Performance Analytics',
-        description: 'Automated Excel reports and Power BI dashboards tracking employee KPIs, supporting HR in data-driven talent management decisions.',
+        description: 'Automated Excel reports and Power BI dashboards tracking employee KPIs. Supported HR in data-driven talent management decisions.',
         tags: ['Excel', 'Power BI', 'VBA'],
-        filter: 'excel',
-        image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop',
-        github: '#',
+        github: 'https://github.com/krishanchoudhary01',
         demo: '#'
     },
     {
         title: 'Market Research Data Pipeline',
-        description: 'ETL pipeline using Python to clean and analyze market research data, providing actionable insights for product development strategy.',
-        tags: ['Python', 'SQL', 'ETL'],
-        filter: 'python',
-        image: 'https://images.unsplash.com/photo-1518611505868-d2b4fd09b1d4?w=500&h=300&fit=crop',
-        github: '#',
-        demo: '#'
-    },
-    {
-        title: 'Financial Data Analysis',
-        description: 'SQL database optimization and Excel dashboards for financial reporting, reducing data processing time by 40% and improving accuracy.',
-        tags: ['SQL', 'Excel', 'Finance'],
-        filter: 'sql',
-        image: 'https://images.unsplash.com/photo-1526628652108-aa09b6a23dea?w=500&h=300&fit=crop',
-        github: '#',
-        demo: '#'
-    },
-    {
-        title: 'Business Intelligence Suite',
-        description: 'Complete BI solution combining Power BI, Power Query, and DAX for real-time business metrics and executive dashboards.',
-        tags: ['Power BI', 'DAX', 'Power Query'],
-        filter: 'powerbi',
-        image: 'https://images.unsplash.com/photo-1551353086-b54d5f2a1c93?w=500&h=300&fit=crop',
-        github: '#',
+        description: 'ETL pipeline in Python to clean and analyze market research data, providing actionable insights for product development strategy.',
+        tags: ['Python', 'SQL', 'Data Cleaning'],
+        github: 'https://github.com/krishanchoudhary01',
         demo: '#'
     }
 ];
 
-// Render projects
-function renderProjects(filter = 'all') {
-    const projectsGrid = document.getElementById('projectsGrid');
-    projectsGrid.innerHTML = '';
+// ─── Render Projects ─────────────────────────────────────────
+function renderProjects() {
+    const list = document.getElementById('projectsList');
+    if (!list) return;
 
-    const filtered = filter === 'all' ? projects : projects.filter(p => p.filter === filter);
+    list.innerHTML = '';
 
-    filtered.forEach((project, index) => {
-        const projectCard = document.createElement('div');
-        projectCard.className = 'project-card';
-        projectCard.innerHTML = `
-            <div class="project-image-wrapper">
-                <img src="${project.image}" alt="${project.title}" class="project-image">
-                <div class="project-overlay">
-                    <a href="${project.demo}" target="_blank" class="view-btn">View Project</a>
+    projects.forEach((project, index) => {
+        const card = document.createElement('a');
+        card.className = 'proj-card reveal';
+        card.href = project.github !== '#' ? project.github : '#';
+        if (project.github !== '#') {
+            card.setAttribute('target', '_blank');
+            card.setAttribute('rel', 'noopener noreferrer');
+        }
+
+        card.innerHTML = `
+            <div class="proj-left">
+                <div class="proj-number">0${index + 1}</div>
+                <div class="proj-title">${project.title}</div>
+                <p class="proj-desc">${project.description}</p>
+                <div class="proj-tags">
+                    ${project.tags.map(t => `<span class="proj-tag">${t}</span>`).join('')}
                 </div>
             </div>
-            <div class="project-content">
-                <h3>${project.title}</h3>
-                <p class="project-description">${project.description}</p>
-                <div class="project-tags">
-                    ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                </div>
-                <div class="project-links">
-                    <a href="${project.github}" target="_blank">View Code</a>
-                    <a href="${project.demo}" target="_blank">Live Demo</a>
-                </div>
-            </div>
+            <span class="proj-arrow">↗</span>
         `;
-        projectsGrid.appendChild(projectCard);
+
+        list.appendChild(card);
+    });
+
+    // trigger reveal for already-visible items
+    setTimeout(initReveal, 50);
+}
+
+// ─── Mobile Nav ──────────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+
+    // close on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+        });
     });
 }
 
-// Filter functionality
-const filterButtons = document.querySelectorAll('.filter-btn');
-filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter = btn.getAttribute('data-filter');
-        renderProjects(filter);
+// close mobile nav when clicking outside
+document.addEventListener('click', (e) => {
+    if (navLinks && navLinks.classList.contains('open')) {
+        if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+            navLinks.classList.remove('open');
+        }
+    }
+});
+
+// ─── Smooth Scroll ───────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
     });
 });
 
-// Contact form
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Thank you for your message! I will get back to you soon.');
-        contactForm.reset();
+// ─── Navbar scroll shadow ────────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+        navbar.style.borderBottomColor = 'rgba(255,255,255,0.1)';
+    } else {
+        navbar.style.borderBottomColor = 'rgba(255,255,255,0.08)';
+    }
+}, { passive: true });
+
+// ─── Scroll Reveal ───────────────────────────────────────────
+function initReveal() {
+    const elements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                // stagger siblings
+                const siblings = [...entry.target.parentElement.querySelectorAll('.reveal:not(.visible)')];
+                const delay = siblings.indexOf(entry.target) * 60;
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, delay);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -60px 0px'
     });
+
+    elements.forEach(el => observer.observe(el));
 }
 
-// Initialize
+// Mark section children as reveal targets
+function markRevealTargets() {
+    const targets = document.querySelectorAll(
+        '.about-layout, .skills-grid, .skill-card, .stack-item, .contact-layout'
+    );
+    targets.forEach(el => el.classList.add('reveal'));
+}
+
+// ─── Init ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     renderProjects();
-    updateActiveNav();
+    markRevealTargets();
+    initReveal();
 });
