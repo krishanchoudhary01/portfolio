@@ -158,3 +158,4 @@ progressBars.forEach(bar => progressObserver.observe(bar));
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Portfolio loaded successfully');
 });
+
