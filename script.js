@@ -1,4 +1,4 @@
-// Theme Toggle
+
 const themeBtn = document.getElementById('themeBtn');
 const body = document.body;
 
